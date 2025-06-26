@@ -57,7 +57,7 @@ class SpeechTranscription {
   private getApiConfig(): ApiConfig {
     const config = vscode.workspace.getConfiguration('whisper-assistant');
     const provider = config.get<ApiProvider>('apiProvider') || 'localhost';
-
+    const language = config.get<String>('language') || 'en';
     const apiKey = config.get<string>('apiKey');
     if (!apiKey) {
       vscode.window.showErrorMessage(
@@ -295,11 +295,11 @@ class SpeechTranscription {
         );
         return undefined;
       }
-
+      const selectedLanguage = config.get<string>('language') || 'en';
       const transcription = await openai.audio.transcriptions.create({
         file: audioFile,
         model: model,
-        language: 'en',
+        language: selectedLanguage,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         response_format: 'verbose_json',
       });
